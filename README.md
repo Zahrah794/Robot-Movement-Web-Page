@@ -15,7 +15,8 @@ The objective of this project is to develop a web page using HTML, CSS, and Java
 ![image](https://github.com/Zahrah794/Robot-Movement-Web-Page/assets/139267881/32f51243-ea4c-455f-8cce-4fbc3f41ee34)
 
 
-## Retrieving Robot Movement Data from a Database
+## Retrieving the Last Robot Movement Data from a Database
+
 
 ![image](https://github.com/Zahrah794/Robot-Movement-Web-Page/assets/139267881/46edcc3f-2408-4ada-8e61-4c4774c9ebb5)
 
