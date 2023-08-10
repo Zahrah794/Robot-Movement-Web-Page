@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #myCanvas {
+            border: 1px solid #d3d3d3;
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            background-color: #2196f3;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Move the Line</h1>
+        <canvas id="myCanvas" width="500" height="500"></canvas>
+        <button id="forward" class="btn">Forward</button>
+        <button id="backward" class="btn">Backward</button>
+        <button id="left" class="btn">Left</button>
+        <button id="right" class="btn">Right</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
+        let x = 250;
+        let y = 250;
+
+        function drawLineTo(newX, newY) {
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(newX, newY);
+            ctx.stroke();
+
+            x = newX;
+            y = newY;
+        }
+
+        function saveDistanceToServer(buttonId) {
+            const xhr = new XMLHttpRequest();
+            const url = "ht2.php";
+            const params = "Direction=" + encodeURIComponent(buttonId);
+
+            xhr.open("POST", url, true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        console.log("Request successful");
+                        console.log(xhr.responseText);
+                    } else {
+                        console.log("Error: " + xhr.status);
+                    }
+                }
+            };
+
+            xhr.send(params);
+        }
+
+        function handleButtonClick(event) {
+            const buttonId = event.target.id;
+            const buttonMap = {
+                'forward': { x: 0, y: -50 },
+                'backward': { x: 0, y: 50 },
+                'left': { x: -50, y: 0 },
+                'right': { x: 50, y: 0 }
+            };
+
+            const { x: deltaX, y: deltaY } = buttonMap[buttonId];
+            const newX = x + deltaX;
+            const newY = y + deltaY;
+
+            drawLineTo(newX, newY);
+            saveDistanceToServer(buttonId);
+        }
+
+        const buttons = document.getElementsByClassName('btn');
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener('click', handleButtonClick);
+        }
+    </script>
+</body>
+</html>
